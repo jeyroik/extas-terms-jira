@@ -1,0 +1,39 @@
+{
+  "name": "extas/terms-jira",
+  "terms": [
+    {
+      "name": "jira__total_issues",
+      "tags": ["grade.term.jira"]
+    },
+    {
+      "name": "jira__done_issues",
+      "tags": ["grade.term.jira"],
+      "parameters": {
+        "status_variants": {
+          "name": "status_variants",
+          "value": ["done", "finished"]
+        }
+      }
+    }
+  ],
+  "terms_calculators": [
+    {
+      "name": "jira__total_issues",
+      "class": "extas\\components\\terms\\jira\\TotalIssues"
+    },
+    {
+      "name": "jira__status_counter",
+      "class": "extas\\components\\terms\\jira\\ByStatusIssuesCount",
+      "parameters": {
+        "field_name": {
+          "name": "field_name",
+          "value": "statusCategory"
+        },
+        "category_field_name": {
+          "name": "category_field_name",
+          "value": "id"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+{
+  "terms": [
+    {
+      "name": "jira__total_issues",
+      "tags": ["grade.term.jira"]
+    },
+    {
+      "name": "jira__done_issues",
+      "tags": ["grade.term.jira"],
+      "parameters": {
+        "jira__count_by_status": {
+          "name": "jira__count_by_status",
+          "value": true
+        },
+        "status_variants": {
+          "name": "status_variants",
+          "value": ["In progress"]
+        }
+      }
+    }
+  ],
+  "terms_calculators": [
+    {
+      "name": "jira__status_counter",
+      "class": "extas\\components\\terms\\jira\\ByStatusIssuesCount",
+      "tags": ["jira"],
+      "parameters": {
+        "field_name": {
+          "name": "field_name",
+          "value": "statusCategory"
+        },
+        "category_field_name": {
+          "name": "category_field_name",
+          "value": "id"
+        }
+      }
+    }
+  ]
+}
