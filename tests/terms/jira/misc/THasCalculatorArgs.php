@@ -26,6 +26,11 @@ trait THasCalculatorArgs
                             'id' => 1,
                             'key' => 'JRK-1',
                             'fields' => [
+                                'timespent' => 12900,
+                                'priority' => [
+                                    "name" => "Medium",
+				                    "id" => 3
+                                ],
                                 'status' => [
                                     "name" => "Готово",
                                     "id" => "10001",
@@ -42,6 +47,11 @@ trait THasCalculatorArgs
                             'id' => 2,
                             'key' => 'JRK-2',
                             'fields' => [
+                                'timespent' => 600,
+                                'priority' => [
+                                    "name" => "High",
+                                    "id" => 2
+                                ],
                                 'status' => [
                                     "name" => "In progress",
                                     "id" => "10002",
@@ -57,7 +67,9 @@ trait THasCalculatorArgs
                     ],
                     SearchResult::FIELD__NAMES => [
                         'project' => 'Project',
-                        'status' => 'Status'
+                        'status' => 'Status',
+                        'timespent' => 'Time spent',
+                        'priority' => 'Priority'
                     ],
                     SearchResult::FIELD__SCHEMA => [
                         'project' => [
@@ -67,6 +79,14 @@ trait THasCalculatorArgs
                         'status' => [
                             "type" => "status",
                             "system" => "status"
+                        ],
+                        'timespent' => [
+                            "type" => "number",
+			                "system" => "timespent"
+                        ],
+                        'priority' => [
+                            "type" => "priority",
+                            "system" => "priority"
                         ]
                     ]
                 ])
