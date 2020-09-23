@@ -17,6 +17,7 @@ use extas\components\plugins\TSnuffPlugins;
 use extas\components\repositories\TSnuffRepositoryDynamic;
 use extas\components\terms\jira\MathOperations;
 use extas\components\terms\jira\strategies\MathOperationCross;
+use extas\components\terms\jira\strategies\MathOperationTotal;
 use extas\components\terms\jira\THasIssuesSearchResult;
 use extas\components\terms\Term;
 use extas\interfaces\extensions\jira\fields\IExtensionNativeFields;
@@ -185,6 +186,21 @@ class MathOperationsTest extends TestCase
         $this->assertEmpty($result, 'There is result: ' . print_r($result, true));
     }
 
+    public function testTotalStrategy()
+    {
+        $term = $this->getTerm();
+        $calculator = $this->getCalculator();
+        $args = $this->getArgs();
+        $term->setParameterValue(MathOperations::TERM_PARAM__STRATEGY, MathOperationTotal::class);
+        $result = $calculator->calculateTerm($term, $args);
+
+        $this->assertEquals(
+            13505,
+            $result,
+            'Incorrect result: ' . $result
+        );
+    }
+
     public function testFailOperations()
     {
         $term = $this->getTerm();
@@ -213,7 +229,7 @@ class MathOperationsTest extends TestCase
                 ],
                 MathOperations::TERM_PARAM__FIELDS => [
                     ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__FIELDS,
-                    ISampleParameter::FIELD__VALUE => ['timespent', 'priority']
+                    ISampleParameter::FIELD__VALUE => ['timespent', 'priority', 'unknown']
                 ],
                 MathOperations::TERM_PARAM__SUBFIELDS => [
                     ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__SUBFIELDS,

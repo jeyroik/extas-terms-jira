@@ -11,16 +11,15 @@ use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
 
 /**
- * Class MatOperationCross
+ * Class MathOperationTotal
  *
  * 1. Берёт указанные поля из одного тикета, проводит операцию OPERATION между ними.
- * 2. Берёт указанные поля из следующего тикета, проводит операцию OPERATION между ними.
- * 3. Берёт результаты из первого тикета и следующих, проводит операцию CROSS OPERATION между ними.
+ * 2. Берёт результаты из первого тикета, поля из следующего, проводит операцию OPERATION между ними.
  *
  * @package extas\components\terms\jira\strategies
  * @author jeyroik <jeyroik@gmail.com>
  */
-class MathOperationCross extends MathOperationStrategy
+class MathOperationTotal extends MathOperationStrategy
 {
     use THasIssuesSearchResult;
     use TMathOperation;
@@ -42,21 +41,18 @@ class MathOperationCross extends MathOperationStrategy
         $result = $this->getIssuesSearchResult($args);
         $issues = $result->getIssues();
 
-        $forCrossOperation = [];
+        $total = 0;
 
         foreach ($issues as $issue) {
             $forOperation = $this->getIssueFields($issue, $fieldsNames, $subfields);
-            $forCrossOperation[] = $this->runOperationStage(
+            $forOperation[] = $total;
+            $total = $this->runOperationStage(
                 $operation,
                 $term,
                 $forOperation
             );
         }
 
-        return $this->runOperationStage(
-            $term->getParameterValue(static::TERM_PARAM__CROSS_OPERATION, ''),
-            $term,
-            $forCrossOperation
-        );
+        return $total;
     }
 }
