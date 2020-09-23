@@ -171,6 +171,18 @@ class MathOperationsTest extends TestCase
             $result,
             'Incorrect result: ' . print_r($result, true)
         );
+
+        $term->setParameterValue(OperationNamedAverage::TERM_PARAM__FUNCTION_NAME, 'unknown');
+        $term->setParameterValue(OperationNamedAverage::TERM_PARAM__FUNCTION_ARGS, [2]);
+
+        $result = $calculator->calculateTerm($term, $args);
+        $this->assertEmpty($result, 'There is result: ' . print_r($result, true));
+
+        $term->setParameterValue(OperationNamedAverage::TERM_PARAM__FUNCTION_NAME, 'powerMean');
+        $term->setParameterValue(MathOperations::TERM_PARAM__STRATEGY, '');
+
+        $result = $calculator->calculateTerm($term, $args);
+        $this->assertEmpty($result, 'There is result: ' . print_r($result, true));
     }
 
     public function testFailOperations()
@@ -181,20 +193,6 @@ class MathOperationsTest extends TestCase
         $result = $this->getIssuesSearchResult($args);
         $result[$result::FIELD__ISSUES] = [];
         $args[IHasHttpIO::FIELD__ARGUMENTS][IHasIssuesSearchResult::FIELD__ISSUES_SEARCH_RESULT] = $result;
-
-        $result = $calculator->calculateTerm($term, $args);
-        $this->assertEmpty($result, 'There is result: ' . print_r($result, true));
-
-        $term->setParameterValue(
-            MathOperations::TERM_PARAM__OPERATION,
-            OperationMultiplication::OPERATION__NAME
-        );
-        $term->setParameterValue(
-            MathOperationCross::TERM_PARAM__CROSS_OPERATION,
-            OperationNamedAverage::OPERATION__NAME
-        );
-        $term->addParameterByValue(OperationNamedAverage::TERM_PARAM__FUNCTION_NAME, 'unknown');
-        $term->addParameterByValue(OperationNamedAverage::TERM_PARAM__FUNCTION_ARGS, [2]);
 
         $result = $calculator->calculateTerm($term, $args);
         $this->assertEmpty($result, 'There is result: ' . print_r($result, true));
