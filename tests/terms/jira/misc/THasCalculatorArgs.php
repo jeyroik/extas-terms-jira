@@ -26,6 +26,9 @@ trait THasCalculatorArgs
                             'id' => 1,
                             'key' => 'JRK-1',
                             'fields' => [
+                                'creator' => [
+                                    'name' => 'jeyroik'
+                                ],
                                 'timespent' => 12900,
                                 'priority' => [
                                     "name" => "Medium",
@@ -69,7 +72,8 @@ trait THasCalculatorArgs
                         'project' => 'Project',
                         'status' => 'Status',
                         'timespent' => 'Time spent',
-                        'priority' => 'Priority'
+                        'priority' => 'Priority',
+                        'creator' => 'Creator'
                     ],
                     SearchResult::FIELD__SCHEMA => [
                         'project' => [
@@ -87,6 +91,10 @@ trait THasCalculatorArgs
                         'priority' => [
                             "type" => "priority",
                             "system" => "priority"
+                        ],
+                        'creator' => [
+                            "type" => "user",
+                            "system" => "creator"
                         ]
                     ]
                 ])
