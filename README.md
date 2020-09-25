@@ -6,7 +6,6 @@
 [![Total Downloads](https://poser.pugx.org/jeyroik/extas-terms-jira/downloads)](//packagist.org/packages/jeyroik/extas-q-crawlers)
 [![Dependents](https://poser.pugx.org/jeyroik/extas-terms-jira/dependents)](//packagist.org/packages/jeyroik/extas-q-crawlers)
 
-
 # Описание
 
 Пакет предоставляет набор термов, которые вычисляются на основании массива тикетов.
@@ -15,7 +14,7 @@
 
 Для установки, необходимо прописать в `extas.json` желаемую конфигурацию термов и калькуляторов.
 
-Пример можно посмотреть в `/resources/example.json`.
+Примеры можно посмотреть в `/resources/example.json`, а также в тестах.
 
 Далее, используйте стандартную установку `extas'a`:
 
@@ -25,5 +24,3 @@
 Либо алиас
 
 `# composer up`
-
-
