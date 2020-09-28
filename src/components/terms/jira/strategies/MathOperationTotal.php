@@ -3,10 +3,6 @@ namespace extas\components\terms\jira\strategies;
 
 use extas\components\terms\jira\MathOperations;
 use extas\components\terms\jira\THasIssuesSearchResult;
-use extas\interfaces\extensions\jira\fields\IHasFieldValue;
-use extas\interfaces\jira\issues\fields\IField;
-use extas\interfaces\jira\issues\IIssue;
-use extas\interfaces\stages\IStageTermJiraMathOperation;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
 
@@ -24,7 +20,7 @@ class MathOperationTotal extends MathOperationStrategy
     use THasIssuesSearchResult;
     use TMathOperation;
 
-    public const TERM_PARAM__CROSS_OPERATION = 'operation_cross';
+    public const TERM_PARAM__TOTAL_OPERATION = 'operation_total';
 
     /**
      * @param ITermCalculator $calculator

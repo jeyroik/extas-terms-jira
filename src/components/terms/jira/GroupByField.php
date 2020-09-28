@@ -52,19 +52,20 @@ class GroupByField extends TermCalculator
             $groupedBy = $this->append($issue, $groupBy, $subfieldMethod, $groupedBy);
         }
 
-        return $this->runStage($groupBy, $groupedBy);
+        return $this->runStage($groupBy, $groupedBy, $args);
     }
 
     /**
      * @param string $groupBy
      * @param array $groupedBy
+     * @param array $args
      * @return array
      */
-    protected function runStage(string $groupBy, array $groupedBy): array
+    protected function runStage(string $groupBy, array $groupedBy, array $args): array
     {
         $result = [];
 
-        foreach ($this->getPluginsByStage(IStageTermJiraGroupBy::NAME . '.' . $groupBy) as $plugin) {
+        foreach ($this->getPluginsByStage(IStageTermJiraGroupBy::NAME . '.' . $groupBy, $args) as $plugin) {
             /**
              * @var IStageTermJiraGroupBy $plugin
              */
