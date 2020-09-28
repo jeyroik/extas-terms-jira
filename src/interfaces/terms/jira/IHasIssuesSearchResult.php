@@ -31,5 +31,5 @@ interface IHasIssuesSearchResult
         array $names = [],
         array $schema = [],
         array $args = []
-    ): array
+    ): array;
 }
