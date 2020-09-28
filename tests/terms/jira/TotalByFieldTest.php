@@ -5,13 +5,17 @@ use Dotenv\Dotenv;
 use extas\components\extensions\Extension;
 use extas\components\extensions\jira\fields\ExtensionNativeFields;
 use extas\components\repositories\TSnuffRepositoryDynamic;
+use extas\components\terms\jira\THasIssuesSearchResult;
 use extas\components\terms\jira\TotalByField;
 use extas\components\terms\Term;
 use extas\interfaces\extensions\jira\fields\IExtensionNativeFields;
+use extas\interfaces\http\IHasHttpIO;
 use extas\interfaces\jira\issues\fields\IField;
+use extas\interfaces\jira\results\issues\ISearchResult;
 use extas\interfaces\samples\parameters\ISampleParameter;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
+use extas\interfaces\terms\jira\IHasIssuesSearchResult;
 use PHPUnit\Framework\TestCase;
 use tests\terms\jira\misc\THasCalculatorArgs;
 
@@ -24,6 +28,7 @@ use tests\terms\jira\misc\THasCalculatorArgs;
 class TotalByFieldTest extends TestCase
 {
     use THasCalculatorArgs;
+    use THasIssuesSearchResult;
     use TSnuffRepositoryDynamic;
 
     protected function setUp(): void
@@ -45,6 +50,23 @@ class TotalByFieldTest extends TestCase
     protected function tearDown(): void
     {
         $this->deleteSnuffDynamicRepositories();
+    }
+
+    public function testHasIssueSearchResult()
+    {
+        $args = $this->setIssuesSearchResult([]);
+        $this->assertNotEmpty($args, 'Incorrect arguments');
+        $this->assertArrayHasKey(IHasHttpIO::FIELD__ARGUMENTS, $args, 'Missed arguments key');
+        $this->assertArrayHasKey(
+            IHasIssuesSearchResult::FIELD__ISSUES_SEARCH_RESULT,
+            $args[IHasHttpIO::FIELD__ARGUMENTS],
+            'Incorrect arguments'
+        );
+        $this->assertInstanceOf(
+            ISearchResult::class,
+            $args[IHasHttpIO::FIELD__ARGUMENTS][IHasIssuesSearchResult::FIELD__ISSUES_SEARCH_RESULT],
+            'Incorrect search result'
+        );
     }
 
     public function testCountByField()

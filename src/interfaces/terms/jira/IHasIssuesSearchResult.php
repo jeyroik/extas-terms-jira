@@ -18,4 +18,18 @@ interface IHasIssuesSearchResult
      * @return ISearchResult|null
      */
     public function getIssuesSearchResult(array $args): ?ISearchResult;
+
+    /**
+     * @param array $issues
+     * @param array $names
+     * @param array $schema
+     * @param array $args
+     * @return array
+     */
+    public function setIssuesSearchResult(
+        array $issues,
+        array $names = [],
+        array $schema = [],
+        array $args = []
+    ): array;
 }
