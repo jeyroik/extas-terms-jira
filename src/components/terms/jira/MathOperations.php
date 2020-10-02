@@ -21,7 +21,7 @@ class MathOperations extends TermCalculator
     /**
      * @value true|false
      */
-    public const TERM_PARAM__MARKER = 'jira__mat_operation';
+    public const TERM_PARAM__MARKER = 'jira__math_operation';
 
     /**
      * @value [field1, field2, ...]
@@ -87,7 +87,7 @@ class MathOperations extends TermCalculator
 
             protected function getSubjectForExtension(): string
             {
-                return 'extas.term.jira.mat.operation.strategy.holder';
+                return 'extas.term.jira.math.operation.strategy.holder';
             }
         };
     }

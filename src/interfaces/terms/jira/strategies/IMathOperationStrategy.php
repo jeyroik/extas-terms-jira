@@ -13,7 +13,7 @@ use extas\interfaces\terms\ITermCalculator;
  */
 interface IMathOperationStrategy extends IItem
 {
-    public const SUBJECT = 'extas.term.jira.strategy.mat.operation';
+    public const SUBJECT = 'extas.term.jira.strategy.math.operation';
 
     /**
      * @param ITermCalculator $calculator
