@@ -66,7 +66,7 @@ class GroupByFieldTest extends TestCase
 
         $this->assertEquals(
             [
-                GroupIssuesCount::FIELD__SELF_MARKER => [
+                GroupIssuesCount::FIELD__SELF_MARKER . '.unknown' => [
                     'jeyroik' => 1
                 ]
             ],
@@ -95,7 +95,7 @@ class GroupByFieldTest extends TestCase
 
         $this->assertEquals(
             [
-                GroupMathOperations::FIELD__SELF_MARKER => [
+                GroupMathOperations::FIELD__SELF_MARKER . '.unknown' => [
                     'jeyroik' => 12900
                 ]
             ],
