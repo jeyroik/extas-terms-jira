@@ -11,7 +11,7 @@ use extas\interfaces\terms\ITerm;
  */
 interface IStageTermJiraMathOperation
 {
-    public const NAME = 'extas.term.jira.mat.operation';
+    public const NAME = 'extas.term.jira.math.operation';
 
     /**
      * @param array $values
