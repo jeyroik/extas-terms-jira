@@ -7,6 +7,7 @@ use extas\components\terms\jira\MathOperations;
 use extas\components\terms\jira\THasIssuesSearchResult;
 use extas\components\terms\Term;
 use extas\interfaces\http\IHasHttpIO;
+use extas\interfaces\IHasName;
 use extas\interfaces\samples\parameters\ISampleParameter;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
 use extas\interfaces\terms\ITerm;
@@ -33,7 +34,8 @@ class GroupMathOperations extends Plugin implements IStageTermJiraGroupBy
     public function __invoke(array $groupedBy, array $result, ITerm $term): array
     {
         $issuesResult = $this->getIssuesSearchResult($this->__toArray());
-        $result[static::FIELD__SELF_MARKER] = [];
+        $curName = $this->getParameterValue(IHasName::FIELD__NAME, 'unknown');
+        $result[static::FIELD__SELF_MARKER . '.' . $curName] = [];
 
         $calculator = new MathOperations();
         if (!$term->hasParameter(MathOperations::TERM_PARAM__MARKER)) {
@@ -53,7 +55,7 @@ class GroupMathOperations extends Plugin implements IStageTermJiraGroupBy
                 ]
             ];
 
-            $result[static::FIELD__SELF_MARKER][$value] = $calculator->calculateTerm($term, $args);
+            $result[static::FIELD__SELF_MARKER . '.' . $curName][$value] = $calculator->calculateTerm($term, $args);
         }
 
         return $result;

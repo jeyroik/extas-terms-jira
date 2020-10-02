@@ -2,6 +2,7 @@
 namespace extas\components\plugins\terms\jira\groups;
 
 use extas\components\plugins\Plugin;
+use extas\interfaces\IHasName;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
 use extas\interfaces\terms\ITerm;
 
@@ -23,10 +24,11 @@ class GroupIssuesCount extends Plugin implements IStageTermJiraGroupBy
      */
     public function __invoke(array $groupedBy, array $result, ITerm $term): array
     {
-        $result[static::FIELD__SELF_MARKER] = [];
+        $curName = $this->getParameterValue(IHasName::FIELD__NAME, 'unknown');
+        $result[static::FIELD__SELF_MARKER . '.' . $curName] = [];
 
         foreach ($groupedBy as $value => $issues) {
-            $result[static::FIELD__SELF_MARKER][$value] = count($issues);
+            $result[static::FIELD__SELF_MARKER . '.' . $curName][$value] = count($issues);
         }
 
         return $result;
