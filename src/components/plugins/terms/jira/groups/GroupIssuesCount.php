@@ -3,6 +3,7 @@ namespace extas\components\plugins\terms\jira\groups;
 
 use extas\components\plugins\Plugin;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
+use extas\interfaces\terms\ITerm;
 
 /**
  * Class GroupIssuesCount
@@ -17,9 +18,10 @@ class GroupIssuesCount extends Plugin implements IStageTermJiraGroupBy
     /**
      * @param array $groupedBy
      * @param array $result
+     * @param ITerm $term
      * @return array
      */
-    public function __invoke(array $groupedBy, array $result): array
+    public function __invoke(array $groupedBy, array $result, ITerm $term): array
     {
         $result[static::FIELD__SELF_MARKER] = [];
 
