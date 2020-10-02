@@ -1,6 +1,8 @@
 <?php
 namespace extas\interfaces\stages;
 
+use extas\interfaces\terms\ITerm;
+
 /**
  * Interface IStageTermJiraGroupBy
  *
@@ -14,7 +16,8 @@ interface IStageTermJiraGroupBy
     /**
      * @param array $groupedBy [string fieldValue => array issues, ...]
      * @param array $result
+     * @param ITerm $term
      * @return array
      */
-    public function __invoke(array $groupedBy, array $result): array;
+    public function __invoke(array $groupedBy, array $result, ITerm $term): array;
 }

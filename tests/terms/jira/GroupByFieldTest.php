@@ -5,14 +5,19 @@ use Dotenv\Dotenv;
 use extas\components\extensions\Extension;
 use extas\components\extensions\jira\fields\ExtensionNativeFields;
 use extas\components\plugins\terms\jira\groups\GroupIssuesCount;
+use extas\components\plugins\terms\jira\groups\GroupMathOperations;
+use extas\components\plugins\terms\jira\operations\OperationSum;
 use extas\components\plugins\TSnuffPlugins;
 use extas\components\repositories\TSnuffRepositoryDynamic;
 use extas\components\terms\jira\GroupByField;
+use extas\components\terms\jira\MathOperations;
+use extas\components\terms\jira\strategies\MathOperationTotal;
 use extas\components\terms\Term;
 use extas\interfaces\extensions\jira\fields\IExtensionNativeFields;
 use extas\interfaces\jira\issues\fields\IField;
 use extas\interfaces\samples\parameters\ISampleParameter;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
+use extas\interfaces\stages\IStageTermJiraMathOperation;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
 use PHPUnit\Framework\TestCase;
@@ -35,7 +40,7 @@ class GroupByFieldTest extends TestCase
             Extension::FIELD__INTERFACE => IExtensionNativeFields::class,
             Extension::FIELD__SUBJECT => IField::SUBJECT,
             Extension::FIELD__METHODS => [
-                'getFieldName'
+                'getFieldName', 'getFieldValue'
             ]
         ]));
     }
@@ -70,6 +75,35 @@ class GroupByFieldTest extends TestCase
         );
     }
 
+    public function testMathOperations()
+    {
+        $this->createSnuffPlugin(GroupMathOperations::class, [IStageTermJiraGroupBy::NAME . '.creator']);
+        $this->createSnuffPlugin(
+            OperationSum::class,
+            [IStageTermJiraMathOperation::NAME . '.' . OperationSum::OPERATION__NAME]
+        );
+        $term = $this->getTerm();
+        $calculator = $this->getCalculator();
+        $args = $this->getArgs();
+
+        $this->assertTrue(
+            $calculator->canCalculate($term, $args),
+            'Incorrect calculate possibility'
+        );
+
+        $result = $calculator->calculateTerm($term, $args);
+
+        $this->assertEquals(
+            [
+                GroupMathOperations::FIELD__SELF_MARKER => [
+                    'jeyroik' => 12900
+                ]
+            ],
+            $result,
+            'Incorrect result: ' . print_r($result, true)
+        );
+    }
+
     protected function getTerm(): ITerm
     {
         return new Term([
@@ -85,6 +119,18 @@ class GroupByFieldTest extends TestCase
                 GroupByField::TERM_PARAM__SUBFIELD_NAME => [
                     ISampleParameter::FIELD__NAME => GroupByField::TERM_PARAM__SUBFIELD_NAME,
                     ISampleParameter::FIELD__VALUE => 'name'
+                ],
+                MathOperations::TERM_PARAM__STRATEGY => [
+                    ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__STRATEGY,
+                    ISampleParameter::FIELD__VALUE => MathOperationTotal::class
+                ],
+                MathOperations::TERM_PARAM__OPERATION => [
+                    ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__OPERATION,
+                    ISampleParameter::FIELD__VALUE => OperationSum::OPERATION__NAME
+                ],
+                MathOperations::TERM_PARAM__FIELDS => [
+                    ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__FIELDS,
+                    ISampleParameter::FIELD__VALUE => ['timespent']
                 ]
             ]
         ]);

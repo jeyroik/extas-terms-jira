@@ -52,16 +52,17 @@ class GroupByField extends TermCalculator
             $groupedBy = $this->append($issue, $groupBy, $subfieldMethod, $groupedBy);
         }
 
-        return $this->runStage($groupBy, $groupedBy, $args);
+        return $this->runStage($groupBy, $groupedBy, $args, $term);
     }
 
     /**
      * @param string $groupBy
      * @param array $groupedBy
      * @param array $args
+     * @param ITerm $term
      * @return array
      */
-    protected function runStage(string $groupBy, array $groupedBy, array $args): array
+    protected function runStage(string $groupBy, array $groupedBy, array $args, ITerm $term): array
     {
         $result = [];
 
@@ -69,7 +70,7 @@ class GroupByField extends TermCalculator
             /**
              * @var IStageTermJiraGroupBy $plugin
              */
-            $result = $plugin($groupedBy, $result);
+            $result = $plugin($groupedBy, $result, $term);
         }
 
         return $result;
