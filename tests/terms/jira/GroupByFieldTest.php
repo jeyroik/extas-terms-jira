@@ -91,6 +91,10 @@ class GroupByFieldTest extends TestCase
                 MathOperations::TERM_PARAM__FIELDS => [
                     ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__FIELDS,
                     ISampleParameter::FIELD__VALUE => ['timespent']
+                ],
+                'test' => [
+                    ISampleParameter::FIELD__NAME => 'test',
+                    ISampleParameter::FIELD__VALUE => ['timespent']
                 ]
             ]
         ]));
