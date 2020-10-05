@@ -31,7 +31,7 @@ class GroupMathOperations extends Plugin implements IStageTermJiraGroupBy
      * @param ITerm $term
      * @return array
      */
-    public function __invoke(array $groupedBy, array $result, ITerm $term): array
+    public function __invoke(array &$groupedBy, array $result, ITerm $term): array
     {
         $issuesResult = $this->getIssuesSearchResult($this->__toArray());
         $curName = $this->getParameterValue(IHasName::FIELD__NAME, 'unknown');
