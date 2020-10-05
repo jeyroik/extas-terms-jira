@@ -1,3 +1,8 @@
+# 1.1.0
+
+- `JiraTermCalculator` added.
+- Allowed passing issues to a calculator arguments.
+
 # 1.0.1
 
 - Term parameters updating fixed.

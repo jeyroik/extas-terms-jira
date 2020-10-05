@@ -2,6 +2,7 @@
 namespace extas\interfaces\terms\jira\strategies;
 
 use extas\interfaces\IItem;
+use extas\interfaces\jira\issues\IIssue;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
 
@@ -18,8 +19,8 @@ interface IMathOperationStrategy extends IItem
     /**
      * @param ITermCalculator $calculator
      * @param ITerm $term
-     * @param array $args
+     * @param IIssue[] $issues
      * @return mixed
      */
-    public function __invoke(ITermCalculator $calculator, ITerm $term, array $args);
+    public function __invoke(ITermCalculator $calculator, ITerm $term, array $issues);
 }

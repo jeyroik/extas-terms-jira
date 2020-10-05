@@ -2,7 +2,6 @@
 namespace extas\components\terms\jira;
 
 use extas\components\Item;
-use extas\components\terms\TermCalculator;
 use extas\components\THasClass;
 use extas\interfaces\IHasClass;
 use extas\interfaces\terms\ITerm;
@@ -14,7 +13,7 @@ use extas\interfaces\terms\jira\strategies\IMathOperationStrategy;
  * @package extas\components\terms\jira
  * @author jeyroik <jeyroik@gmail.com>
  */
-class MathOperations extends TermCalculator
+class MathOperations extends JiraTermCalculator
 {
     use THasIssuesSearchResult;
 
@@ -43,15 +42,7 @@ class MathOperations extends TermCalculator
      */
     public const TERM_PARAM__STRATEGY = 'strategy';
 
-    /**
-     * @param ITerm $term
-     * @param array $args
-     * @return bool
-     */
-    public function canCalculate(ITerm $term, array $args = []): bool
-    {
-        return $term->getParameterValue(static::TERM_PARAM__MARKER, false);
-    }
+    protected string $marker = self::TERM_PARAM__MARKER;
 
     /**
      * @param ITerm $term
@@ -73,7 +64,7 @@ class MathOperations extends TermCalculator
         $withClass = $this->getStrategyHolder($strategyClass);
         $strategy = $withClass->buildClassWithParameters();
 
-        return $strategy($this, $term, $args);
+        return $strategy($this, $term, $this->getIssues($args));
     }
 
     /**

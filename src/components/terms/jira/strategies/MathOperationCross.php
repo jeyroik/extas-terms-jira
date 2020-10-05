@@ -3,6 +3,7 @@ namespace extas\components\terms\jira\strategies;
 
 use extas\components\terms\jira\MathOperations;
 use extas\components\terms\jira\THasIssuesSearchResult;
+use extas\interfaces\jira\issues\IIssue;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
 
@@ -26,18 +27,14 @@ class MathOperationCross extends MathOperationStrategy
     /**
      * @param ITermCalculator $calculator
      * @param ITerm $term
-     * @param array $args
+     * @param IIssue[] $issues
      * @return mixed|void
      */
-    public function __invoke(ITermCalculator $calculator, ITerm $term, array $args)
+    public function __invoke(ITermCalculator $calculator, ITerm $term, array $issues)
     {
         $operation = $term->getParameterValue(MathOperations::TERM_PARAM__OPERATION, '');
         $fieldsNames = $term->getParameterValue(MathOperations::TERM_PARAM__FIELDS, []);
         $subfields = $term->getParameterValue(MathOperations::TERM_PARAM__SUBFIELDS, []);
-
-        $result = $this->getIssuesSearchResult($args);
-        $issues = $result->getIssues();
-
         $forCrossOperation = [];
 
         foreach ($issues as $issue) {

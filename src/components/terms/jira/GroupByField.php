@@ -1,7 +1,6 @@
 <?php
 namespace extas\components\terms\jira;
 
-use extas\components\terms\TermCalculator;
 use extas\interfaces\jira\issues\IIssue;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
 use extas\interfaces\terms\ITerm;
@@ -12,7 +11,7 @@ use extas\interfaces\terms\ITerm;
  * @package extas\components\terms\jira
  * @author jeyroik <jeyroik@gmail.com>
  */
-class GroupByField extends TermCalculator
+class GroupByField extends JiraTermCalculator
 {
     use THasIssuesSearchResult;
 
@@ -20,15 +19,7 @@ class GroupByField extends TermCalculator
     public const TERM_PARAM__FIELD_NAME = 'field_name';
     public const TERM_PARAM__SUBFIELD_NAME = 'subfield_name';
 
-    /**
-     * @param ITerm $term
-     * @param array $args
-     * @return bool
-     */
-    public function canCalculate(ITerm $term, array $args = []): bool
-    {
-        return $term->getParameterValue(static::TERM_PARAM__MARKER, false);
-    }
+    protected string $marker = self::TERM_PARAM__MARKER;
 
     /**
      * @param ITerm $term
@@ -37,8 +28,7 @@ class GroupByField extends TermCalculator
      */
     public function calculateTerm(ITerm $term, array $args = [])
     {
-        $result = $this->getIssuesSearchResult($args);
-        $issues = $result->getIssues();
+        $issues = $this->getIssues($args);
         $groupBy = $term->getParameterValue(static::TERM_PARAM__FIELD_NAME, '');
         $subfield = $term->getParameterValue(static::TERM_PARAM__SUBFIELD_NAME, '');
         $subfieldMethod = $subfield ? 'getField' . ucfirst($subfield) : 'getFieldValue';
