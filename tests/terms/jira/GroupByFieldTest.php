@@ -88,9 +88,9 @@ class GroupByFieldTest extends TestCase
             Plugin::FIELD__CLASS => GroupMathOperations::class,
             Plugin::FIELD__STAGE => [IStageTermJiraGroupBy::NAME . '.creator'],
             Plugin::FIELD__PARAMETERS => [
-                'test' => [
-                    'name' => 'test',
-                    'value' => 'test term params updating'
+                MathOperations::TERM_PARAM__FIELDS => [
+                    ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__FIELDS,
+                    ISampleParameter::FIELD__VALUE => ['timespent']
                 ]
             ]
         ]));
