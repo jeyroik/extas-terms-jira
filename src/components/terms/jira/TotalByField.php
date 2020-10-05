@@ -1,7 +1,6 @@
 <?php
 namespace extas\components\terms\jira;
 
-use extas\components\terms\TermCalculator;
 use extas\interfaces\terms\ITerm;
 
 /**
@@ -10,7 +9,7 @@ use extas\interfaces\terms\ITerm;
  * @package extas\components\terms\jira
  * @author jeyroik <jeyroik@gmail.com>
  */
-class TotalByField extends TermCalculator
+class TotalByField extends JiraTermCalculator
 {
     use THasIssuesSearchResult;
 
@@ -18,15 +17,7 @@ class TotalByField extends TermCalculator
     public const TERM_PARAM__FIELD_NAME = 'field_name';
     public const TERM_PARAM__SUB_FIELD_NAME = 'sub_field_name';
 
-    /**
-     * @param ITerm $term
-     * @param array $args
-     * @return bool
-     */
-    public function canCalculate(ITerm $term, array $args = []): bool
-    {
-        return (bool) $term->getParameterValue(static::TERM_PARAM__MARKER, false);
-    }
+    protected string $marker = self::TERM_PARAM__MARKER;
 
     /**
      * @param ITerm $term
@@ -38,9 +29,7 @@ class TotalByField extends TermCalculator
         $fieldName = $term->getParameterValue(static::TERM_PARAM__FIELD_NAME, '');
         $subfield = $term->getParameterValue(static::TERM_PARAM__SUB_FIELD_NAME, '');
         $subfieldMethod = $subfield ? 'getField' . ucfirst($subfield) : 'getFieldValue';
-
-        $result = $this->getIssuesSearchResult($args);
-        $issues = $result->getIssues();
+        $issues = $this->getIssues($args);
         $total = 0;
 
         foreach ($issues as $issue) {

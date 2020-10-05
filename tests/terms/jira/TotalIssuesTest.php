@@ -4,6 +4,7 @@ namespace tests\terms\jira;
 use Dotenv\Dotenv;
 use extas\components\terms\jira\TotalIssues;
 use extas\components\terms\Term;
+use extas\interfaces\samples\parameters\ISampleParameter;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
 use PHPUnit\Framework\TestCase;
@@ -44,12 +45,29 @@ class TotalIssuesTest extends TestCase
             $result,
             'Incorrect calculating: ' . $result
         );
+
+        $issues = [1,2,3];
+        $result = $calculator->calculateTerm($term, $issues);
+
+        $this->assertEquals(
+            3,
+            $result,
+            'Incorrect calculating: ' . $result
+        );
     }
 
+    /**
+     * @return ITerm
+     */
     protected function getTerm(): ITerm
     {
         return new Term([
-            Term::FIELD__NAME => TotalIssues::TERM__TOTAL_ISSUES
+            Term::FIELD__PARAMETERS => [
+                TotalIssues::TERM_PARAM__MARKER => [
+                    ISampleParameter::FIELD__NAME => TotalIssues::TERM_PARAM__MARKER,
+                    ISampleParameter::FIELD__VALUE => true
+                ]
+            ]
         ]);
     }
 

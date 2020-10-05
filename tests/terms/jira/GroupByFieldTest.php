@@ -25,6 +25,12 @@ use extas\interfaces\terms\ITermCalculator;
 use PHPUnit\Framework\TestCase;
 use tests\terms\jira\misc\THasCalculatorArgs;
 
+/**
+ * Class GroupByFieldTest
+ *
+ * @package tests\terms\jira
+ * @author jeyroik <jeyroik@gmail.com>
+ */
 class GroupByFieldTest extends TestCase
 {
     use THasCalculatorArgs;

@@ -10,6 +10,7 @@ use extas\interfaces\terms\ITerm;
 /**
  * Class DoneIssues
  *
+ * @deprecated Please, use GroupByField instead
  * @package extas\components\terms\jira
  * @author jeyroik <jeyroik@gmail.com>
  */
