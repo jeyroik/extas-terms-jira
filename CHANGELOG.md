@@ -1,3 +1,8 @@
+# 1.0.1
+
+- Term parameters updating fixed.
+- Updated packagist badges.
+
 # 1.0.0
 
 - Changed `IStageTermJiraGroupedBy` interface.

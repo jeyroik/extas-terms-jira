@@ -4,6 +4,7 @@ namespace tests\terms\jira;
 use Dotenv\Dotenv;
 use extas\components\extensions\Extension;
 use extas\components\extensions\jira\fields\ExtensionNativeFields;
+use extas\components\plugins\Plugin;
 use extas\components\plugins\terms\jira\groups\GroupIssuesCount;
 use extas\components\plugins\terms\jira\groups\GroupMathOperations;
 use extas\components\plugins\terms\jira\operations\OperationSum;
@@ -13,6 +14,7 @@ use extas\components\terms\jira\GroupByField;
 use extas\components\terms\jira\MathOperations;
 use extas\components\terms\jira\strategies\MathOperationTotal;
 use extas\components\terms\Term;
+use extas\components\THasMagicClass;
 use extas\interfaces\extensions\jira\fields\IExtensionNativeFields;
 use extas\interfaces\jira\issues\fields\IField;
 use extas\interfaces\samples\parameters\ISampleParameter;
@@ -82,6 +84,20 @@ class GroupByFieldTest extends TestCase
             OperationSum::class,
             [IStageTermJiraMathOperation::NAME . '.' . OperationSum::OPERATION__NAME]
         );
+        $this->createWithSnuffRepo('pluginRepository', new Plugin([
+            Plugin::FIELD__CLASS => GroupMathOperations::class,
+            Plugin::FIELD__STAGE => [IStageTermJiraGroupBy::NAME . '.creator'],
+            Plugin::FIELD__PARAMETERS => [
+                MathOperations::TERM_PARAM__FIELDS => [
+                    ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__FIELDS,
+                    ISampleParameter::FIELD__VALUE => ['timespent']
+                ],
+                'test' => [
+                    ISampleParameter::FIELD__NAME => 'test',
+                    ISampleParameter::FIELD__VALUE => ['timespent']
+                ]
+            ]
+        ]));
         $term = $this->getTerm();
         $calculator = $this->getCalculator();
         $args = $this->getArgs();
