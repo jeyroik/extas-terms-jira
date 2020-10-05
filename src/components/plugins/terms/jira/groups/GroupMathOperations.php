@@ -38,10 +38,7 @@ class GroupMathOperations extends Plugin implements IStageTermJiraGroupBy
         $result[static::FIELD__SELF_MARKER . '.' . $curName] = [];
 
         $calculator = new MathOperations();
-        if (!$term->hasParameter(MathOperations::TERM_PARAM__MARKER)) {
-            $term->addParameterByValue(MathOperations::TERM_PARAM__MARKER, true);
-        }
-        $term->addParametersByValues($this->getParametersValues());
+        $this->updateTermParams($term);
 
         foreach ($groupedBy as $value => $issues) {
             $args = [
@@ -59,6 +56,23 @@ class GroupMathOperations extends Plugin implements IStageTermJiraGroupBy
         }
 
         return $result;
+    }
+
+    /**
+     * @param ITerm $term
+     */
+    protected function updateTermParams(ITerm &$term): void
+    {
+        if (!$term->hasParameter(MathOperations::TERM_PARAM__MARKER)) {
+            $term->addParameterByValue(MathOperations::TERM_PARAM__MARKER, true);
+        }
+
+        $pluginParams = $this->getParametersValues();
+        foreach ($pluginParams as $name => $value) {
+            $term->hasParameter($name)
+                ? $term->setParameterValue($name, $value)
+                : $term->addParameterByValue($name, $value);
+        }
     }
 
     /**
