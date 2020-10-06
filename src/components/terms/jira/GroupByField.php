@@ -25,9 +25,9 @@ class GroupByField extends JiraTermCalculator
     /**
      * @param ITerm $term
      * @param array $args
-     * @return array|mixed
+     * @return array|mixed|null
      */
-    public function calculateTerm(ITerm $term, array $args = [])
+    protected function execute(ITerm $term, array $args)
     {
         $issues = $this->getIssues($args);
         $groupBy = $term->getParameterValue(static::TERM_PARAM__FIELD_NAME, '');

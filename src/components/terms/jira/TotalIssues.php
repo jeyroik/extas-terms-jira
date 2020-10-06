@@ -20,9 +20,9 @@ class TotalIssues extends JiraTermCalculator
     /**
      * @param ITerm $term
      * @param array $args
-     * @return int|mixed
+     * @return int|mixed|null
      */
-    public function calculateTerm(ITerm $term, array $args = [])
+    protected function execute(ITerm $term, array $args)
     {
         return count($this->getIssues($args));
     }
