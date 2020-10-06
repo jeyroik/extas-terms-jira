@@ -2,12 +2,17 @@
 namespace tests\terms\jira;
 
 use Dotenv\Dotenv;
+use extas\components\plugins\TSnuffPlugins;
 use extas\components\terms\jira\TotalIssues;
 use extas\components\terms\Term;
 use extas\interfaces\samples\parameters\ISampleParameter;
+use extas\interfaces\stages\IStageTermJiraAfterCalculate;
+use extas\interfaces\stages\IStageTermJiraBeforeCalculate;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
 use PHPUnit\Framework\TestCase;
+use tests\terms\jira\misc\PluginAfterCalculate;
+use tests\terms\jira\misc\PluginBeforeCalculate;
 use tests\terms\jira\misc\THasCalculatorArgs;
 
 /**
@@ -19,12 +24,18 @@ use tests\terms\jira\misc\THasCalculatorArgs;
 class TotalIssuesTest extends TestCase
 {
     use THasCalculatorArgs;
+    use TSnuffPlugins;
 
     protected function setUp(): void
     {
         parent::setUp();
         $env = Dotenv::create(getcwd() . '/tests/');
         $env->load();
+    }
+
+    protected function tearDown(): void
+    {
+        $this->deleteSnuffPlugins();
     }
 
     public function testCount()
@@ -56,6 +67,42 @@ class TotalIssuesTest extends TestCase
         );
     }
 
+    public function testBeforeAndAfterCalculate()
+    {
+        $term = $this->getTerm();
+        $calculator = $this->getCalculator();
+        $args = $this->getArgs();
+
+        $this->assertTrue(
+            $calculator->canCalculate($term, $args),
+            'Incorrect calculate possibility'
+        );
+
+        $this->createSnuffPlugin(
+            PluginBeforeCalculate::class,
+            [IStageTermJiraBeforeCalculate::NAME . '.' . TotalIssues::TERM_PARAM__MARKER]
+        );
+        $this->createSnuffPlugin(
+            PluginAfterCalculate::class,
+            [IStageTermJiraAfterCalculate::NAME . '.' . TotalIssues::TERM_PARAM__MARKER]
+        );
+
+        $issues = [1,2,3];
+        $result = $calculator->calculateTerm($term, $issues);
+
+        $this->assertArrayHasKey(
+            'before.worked',
+            $term->getParametersValues(),
+            'Incorrect before calculate'
+        );
+
+        $this->assertEquals(
+            13,
+            $result,
+            'Incorrect calculating: ' . $result
+        );
+    }
+
     /**
      * @return ITerm
      */
@@ -71,6 +118,9 @@ class TotalIssuesTest extends TestCase
         ]);
     }
 
+    /**
+     * @return ITermCalculator
+     */
     protected function getCalculator(): ITermCalculator
     {
         return new TotalIssues();

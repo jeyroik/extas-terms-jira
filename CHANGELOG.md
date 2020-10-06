@@ -1,3 +1,11 @@
+# 2.0.0
+
+- Removed `ByStatusIssuesCount`. Please, use `TotalByField` or `GroupByField` instead.
+- Stage `extas.term.jira.before.calculate` added to the `JiraTermCalculator`.
+- Stage `extas.term.jira.after.calculate` added to the `JiraTermCalculator`.
+- All calculators rewrited for using `JiraTermCalcualtor` stages.
+  - Please, note `GroupByField` stage is still alive.
+
 # 1.1.1
 
 - Term parameter `do_run_stage` support added to the `GroupByField` calculator.

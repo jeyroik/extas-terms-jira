@@ -22,9 +22,9 @@ class TotalByField extends JiraTermCalculator
     /**
      * @param ITerm $term
      * @param array $args
-     * @return int|mixed
+     * @return int|mixed|null
      */
-    public function calculateTerm(ITerm $term, array $args = [])
+    protected function execute(ITerm $term, array $args)
     {
         $fieldName = $term->getParameterValue(static::TERM_PARAM__FIELD_NAME, '');
         $subfield = $term->getParameterValue(static::TERM_PARAM__SUB_FIELD_NAME, '');

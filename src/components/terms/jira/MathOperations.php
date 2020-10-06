@@ -49,7 +49,7 @@ class MathOperations extends JiraTermCalculator
      * @param array $args
      * @return mixed|null
      */
-    public function calculateTerm(ITerm $term, array $args = [])
+    protected function execute(ITerm $term, array $args)
     {
         /**
          * @var IMathOperationStrategy $strategy
