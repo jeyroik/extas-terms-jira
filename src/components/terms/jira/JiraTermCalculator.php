@@ -90,10 +90,7 @@ abstract class JiraTermCalculator extends TermCalculator
      * @param array $args
      * @return mixed
      */
-    protected function execute(ITerm $term, array $args)
-    {
-        return null;
-    }
+    abstract protected function execute(ITerm $term, array $args);
 
     /**
      * @param array $args
