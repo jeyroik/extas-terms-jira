@@ -1,3 +1,7 @@
+# 1.1.1
+
+- Term parameter `do_run_stage` support added to the `GroupByField` calculator.
+
 # 1.1.0
 
 - `JiraTermCalculator` added.

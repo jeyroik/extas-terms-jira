@@ -18,6 +18,7 @@ class GroupByField extends JiraTermCalculator
     public const TERM_PARAM__MARKER = 'jira__group_by';
     public const TERM_PARAM__FIELD_NAME = 'field_name';
     public const TERM_PARAM__SUBFIELD_NAME = 'subfield_name';
+    public const TERM_PARAM__DO_RUN_STAGE = 'do_run_stage';
 
     protected string $marker = self::TERM_PARAM__MARKER;
 
@@ -42,7 +43,9 @@ class GroupByField extends JiraTermCalculator
             $groupedBy = $this->append($issue, $groupBy, $subfieldMethod, $groupedBy);
         }
 
-        return $this->runStage($groupBy, $groupedBy, $args, $term);
+        return $term->getParameterValue(static::TERM_PARAM__DO_RUN_STAGE, true)
+            ? $this->runStage($groupBy, $groupedBy, $args, $term)
+            : $groupedBy;
     }
 
     /**
