@@ -126,7 +126,29 @@ class GroupByFieldTest extends TestCase
         );
     }
 
-    protected function getTerm(): ITerm
+    public function testWithoutStage()
+    {
+        $this->createSnuffPlugin(GroupIssuesCount::class, [IStageTermJiraGroupBy::NAME . '.creator']);
+        $term = $this->getTerm(false);
+        $calculator = $this->getCalculator();
+        $args = $this->getArgs();
+
+        $this->assertTrue(
+            $calculator->canCalculate($term, $args),
+            'Incorrect calculate possibility'
+        );
+
+        $result = $calculator->calculateTerm($term, $args);
+
+        $this->assertArrayHasKey('jeyroik', $result, 'Incorrect grouping');
+        $this->assertCount(1, $result['jeyroik'], 'Incorrect grouping');
+    }
+
+    /**
+     * @param bool $runStage
+     * @return ITerm
+     */
+    protected function getTerm(bool $runStage = true): ITerm
     {
         return new Term([
             Term::FIELD__PARAMETERS => [
@@ -145,6 +167,10 @@ class GroupByFieldTest extends TestCase
                 MathOperations::TERM_PARAM__STRATEGY => [
                     ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__STRATEGY,
                     ISampleParameter::FIELD__VALUE => MathOperationTotal::class
+                ],
+                GroupByField::TERM_PARAM__DO_RUN_STAGE => [
+                    ISampleParameter::FIELD__NAME => GroupByField::TERM_PARAM__DO_RUN_STAGE,
+                    ISampleParameter::FIELD__VALUE => $runStage
                 ],
                 MathOperations::TERM_PARAM__OPERATION => [
                     ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__OPERATION,
