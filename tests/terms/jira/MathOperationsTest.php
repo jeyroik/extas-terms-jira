@@ -182,8 +182,8 @@ class MathOperationsTest extends TestCase
         $term->setParameterValue(OperationNamedAverage::TERM_PARAM__FUNCTION_NAME, 'powerMean');
         $term->setParameterValue(MathOperations::TERM_PARAM__STRATEGY, '');
 
+        $this->expectExceptionMessage('Missed or unknown strategy class');
         $result = $calculator->calculateTerm($term, $args);
-        $this->assertEmpty($result, 'There is result: ' . print_r($result, true));
     }
 
     public function testTotalStrategy()

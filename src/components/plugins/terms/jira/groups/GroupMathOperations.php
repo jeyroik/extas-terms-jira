@@ -5,10 +5,8 @@ use extas\components\jira\results\issues\SearchResult;
 use extas\components\plugins\Plugin;
 use extas\components\terms\jira\MathOperations;
 use extas\components\terms\jira\THasIssuesSearchResult;
-use extas\components\terms\Term;
 use extas\interfaces\http\IHasHttpIO;
 use extas\interfaces\IHasName;
-use extas\interfaces\samples\parameters\ISampleParameter;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\jira\IHasIssuesSearchResult;
@@ -33,7 +31,6 @@ class GroupMathOperations extends Plugin implements IStageTermJiraGroupBy
      */
     public function __invoke(array &$groupedBy, array $result, ITerm $term): array
     {
-        $issuesResult = $this->getIssuesSearchResult($this->__toArray());
         $curName = $this->getParameterValue(IHasName::FIELD__NAME, 'unknown');
         $result[static::FIELD__SELF_MARKER . '.' . $curName] = [];
 
@@ -45,8 +42,6 @@ class GroupMathOperations extends Plugin implements IStageTermJiraGroupBy
                 IHasHttpIO::FIELD__ARGUMENTS => [
                     IHasIssuesSearchResult::FIELD__ISSUES_SEARCH_RESULT => new SearchResult([
                         SearchResult::FIELD__ISSUES => $this->convertToArray($issues),
-                        SearchResult::FIELD__NAMES => $issuesResult->getNames(),
-                        SearchResult::FIELD__SCHEMA => $this->convertToArray($issuesResult->getSchema()),
                         SearchResult::FIELD__IS_ENRICH_ISSUES => false
                     ])
                 ]

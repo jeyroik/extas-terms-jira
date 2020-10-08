@@ -5,6 +5,7 @@ use extas\interfaces\IItem;
 use extas\interfaces\jira\issues\IIssue;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
+use extas\interfaces\terms\jira\results\ICalculationResult;
 
 /**
  * Interface IMatOperationStrategy
@@ -20,7 +21,7 @@ interface IMathOperationStrategy extends IItem
      * @param ITermCalculator $calculator
      * @param ITerm $term
      * @param IIssue[] $issues
-     * @return mixed
+     * @return ICalculationResult
      */
-    public function __invoke(ITermCalculator $calculator, ITerm $term, array $issues);
+    public function __invoke(ITermCalculator $calculator, ITerm $term, array $issues): ICalculationResult;
 }

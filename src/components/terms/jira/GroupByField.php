@@ -1,9 +1,14 @@
 <?php
 namespace extas\components\terms\jira;
 
+use extas\components\terms\jira\results\ResultArray;
+use extas\components\terms\jira\results\ResultIssues;
 use extas\interfaces\jira\issues\IIssue;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
 use extas\interfaces\terms\ITerm;
+use extas\interfaces\terms\jira\results\ICalculationResult;
+use extas\interfaces\terms\jira\results\IResultArray;
+use extas\interfaces\terms\jira\results\IResultIssues;
 
 /**
  * Class GroupByField
@@ -14,6 +19,7 @@ use extas\interfaces\terms\ITerm;
 class GroupByField extends JiraTermCalculator
 {
     use THasIssuesSearchResult;
+    use THasFieldSubfield;
 
     public const TERM_PARAM__MARKER = 'jira__group_by';
     public const TERM_PARAM__FIELD_NAME = 'field_name';
@@ -21,18 +27,17 @@ class GroupByField extends JiraTermCalculator
     public const TERM_PARAM__DO_RUN_STAGE = 'do_run_stage';
 
     protected string $marker = self::TERM_PARAM__MARKER;
+    protected string $argsInterface = IResultArray::class;
 
     /**
      * @param ITerm $term
-     * @param array $args
-     * @return array|mixed|null
+     * @param array $issues
+     * @return ICalculationResult
      */
-    protected function execute(ITerm $term, array $args)
+    protected function execute(ITerm $term, array $issues): ICalculationResult
     {
-        $issues = $this->getIssues($args);
-        $groupBy = $term->getParameterValue(static::TERM_PARAM__FIELD_NAME, '');
-        $subfield = $term->getParameterValue(static::TERM_PARAM__SUBFIELD_NAME, '');
-        $subfieldMethod = $subfield ? 'getField' . ucfirst($subfield) : 'getFieldValue';
+        $groupBy = $this->getField($term);
+        $subfieldMethod = $this->getSubfieldMethod($term);
         $groupedBy = [];
 
         foreach ($issues as $issue) {
@@ -43,20 +48,30 @@ class GroupByField extends JiraTermCalculator
             $groupedBy = $this->append($issue, $groupBy, $subfieldMethod, $groupedBy);
         }
 
+        $result = new ResultIssues([
+            ResultIssues::FIELD__ISSUES => $groupedBy
+        ]);
+
         return $term->getParameterValue(static::TERM_PARAM__DO_RUN_STAGE, true)
-            ? $this->runStage($groupBy, $groupedBy, $args, $term)
-            : $groupedBy;
+            ? $this->runStage($groupBy, $result, $issues, $term)
+            : $result;
     }
 
     /**
      * @param string $groupBy
-     * @param array $groupedBy
+     * @param IResultIssues $groupedBy
      * @param array $args
      * @param ITerm $term
-     * @return array
+     * @return ICalculationResult
      */
-    protected function runStage(string $groupBy, array $groupedBy, array $args, ITerm $term): array
+    protected function runStage(
+        string $groupBy,
+        IResultIssues $groupedBy,
+        array $args,
+        ITerm $term
+    ): ICalculationResult
     {
+        $groupedBy = $groupedBy->export();
         $result = [];
 
         foreach ($this->getPluginsByStage(IStageTermJiraGroupBy::NAME . '.' . $groupBy, $args) as $plugin) {
@@ -66,7 +81,7 @@ class GroupByField extends JiraTermCalculator
             $result = $plugin($groupedBy, $result, $term);
         }
 
-        return $result;
+        return new ResultArray($result);
     }
 
     /**
