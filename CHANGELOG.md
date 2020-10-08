@@ -1,3 +1,9 @@
+# 2.1.0
+
+- Jira term calculators can be used as plugins now.
+  - Note: it will change result view to an array `[source => <source.result>, <marker> => <plugin.result>]`.
+  - See `tests\terms\jira\TotalIssuesTest` for example.
+
 # 2.0.0
 
 - Removed `ByStatusIssuesCount`. Please, use `TotalByField` or `GroupByField` instead.

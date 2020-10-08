@@ -103,12 +103,39 @@ class TotalIssuesTest extends TestCase
         );
     }
 
+    public function testCalculatorAsPlugin()
+    {
+        $term = $this->getTerm();
+        $calculator = $this->getCalculator();
+        $args = $this->getArgs();
+
+        $this->assertTrue(
+            $calculator->canCalculate($term, $args),
+            'Incorrect calculate possibility'
+        );
+
+        $this->createSnuffPlugin(
+            TotalIssues::class,
+            [IStageTermJiraAfterCalculate::NAME . '.' . TotalIssues::TERM_PARAM__MARKER]
+        );
+
+        $issues = [1,2,3];
+        $result = $calculator->calculateTerm($term, $issues);
+
+        $this->assertEquals(
+            ['source' => 3, 'jira__total_issues' => 3],
+            $result,
+            'Incorrect calculating: ' . print_r($result, true)
+        );
+    }
+
     /**
      * @return ITerm
      */
     protected function getTerm(): ITerm
     {
         return new Term([
+            Term::FIELD__NAME => 'test',
             Term::FIELD__PARAMETERS => [
                 TotalIssues::TERM_PARAM__MARKER => [
                     ISampleParameter::FIELD__NAME => TotalIssues::TERM_PARAM__MARKER,
