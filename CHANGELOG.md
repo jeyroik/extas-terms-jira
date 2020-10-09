@@ -1,3 +1,11 @@
+# 3.0.0
+
+- `ICalculationResult` added.
+  - Changed interface `JiraTermCalculator::execute()`.
+  - Changed interface `IStageTermJiraAfterCalculate`.
+-  `JiraTermCalculator::execute()` is getting issues instead of `args` now.
+- Tests for `TotalIssues` and `JiraTermCalculator` are splited now.
+
 # 2.1.0
 
 - Jira term calculators can be used as plugins now.
@@ -9,7 +17,7 @@
 - Removed `ByStatusIssuesCount`. Please, use `TotalByField` or `GroupByField` instead.
 - Stage `extas.term.jira.before.calculate` added to the `JiraTermCalculator`.
 - Stage `extas.term.jira.after.calculate` added to the `JiraTermCalculator`.
-- All calculators rewrited for using `JiraTermCalcualtor` stages.
+- All calculators rewrote for using `JiraTermCalcualtor` stages.
   - Please, note `GroupByField` stage is still alive.
 
 # 1.1.1

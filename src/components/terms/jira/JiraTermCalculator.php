@@ -1,6 +1,7 @@
 <?php
 namespace extas\components\terms\jira;
 
+use extas\components\terms\jira\results\ResultArray;
 use extas\components\terms\TermCalculator;
 use extas\interfaces\http\IHasHttpIO;
 use extas\interfaces\IHasName;
@@ -8,6 +9,7 @@ use extas\interfaces\jira\issues\IIssue;
 use extas\interfaces\stages\IStageTermJiraAfterCalculate;
 use extas\interfaces\stages\IStageTermJiraBeforeCalculate;
 use extas\interfaces\terms\ITerm;
+use extas\interfaces\terms\jira\results\ICalculationResult;
 
 /**
  * Class JiraTermCalculator
@@ -21,35 +23,28 @@ abstract class JiraTermCalculator extends TermCalculator implements IStageTermJi
 
     public const TERM_PARAM__DO_RUN_BEFORE_STAGE = 'do_run_before_stage';
     public const TERM_PARAM__DO_RUN_AFTER_STAGE = 'do_run_after_stage';
-    public const TERM_PARAM__CALCULATION_MARKER = 'calculation_marker';
 
-    public const PARAM__MARKER = 'marker';
     public const RESULT__SOURCE = 'source';
 
     /**
      * @var string
      */
     protected string $marker = '';
+    protected string $argsInterface = ICalculationResult::class;
 
     /**
-     * @param $result
+     * @param ICalculationResult $result
      * @param $term
      * @param $args
      */
-    public function __invoke(&$result, $term, $args): void
+    public function __invoke(ICalculationResult &$result, $term, $args): void
     {
-        $marker = $this->getParameterValue(static::PARAM__MARKER, $this->marker);
-
-        $term = $this->stabelizeTermMarker($term);
-        $termMarker = $term->getParameterValue(static::TERM_PARAM__CALCULATION_MARKER);
-
-        if (strpos($termMarker, $marker) === false) {
-            $result = $this->stabelizeResult($result);
+        if ($result instanceof $this->argsInterface) {
             $index = $this->getParameterValue(IHasName::FIELD__NAME, $this->marker);
-
-            $term->setParameterValue(static::TERM_PARAM__CALCULATION_MARKER, $termMarker .= $marker);
-
-            $result[$index] = $this->calculateTerm($term, $args);
+            $result = new ResultArray([
+                static::RESULT__SOURCE => $result->export(),
+                $index => $this->execute($term, $result->export())->export()
+            ]);
         }
     }
 
@@ -73,12 +68,12 @@ abstract class JiraTermCalculator extends TermCalculator implements IStageTermJi
         $term->getParameterValue(static::TERM_PARAM__DO_RUN_BEFORE_STAGE, true)
         && $this->runBeforeStage($term, $args);
 
-        $result = $this->execute($term, $args);
+        $result = $this->execute($term, $this->getIssues($args));
 
         $term->getParameterValue(static::TERM_PARAM__DO_RUN_AFTER_STAGE, true)
         && $this->runAfterStage($result, $term, $args);
 
-        return $result;
+        return $result->export();
     }
 
     /**
@@ -97,11 +92,11 @@ abstract class JiraTermCalculator extends TermCalculator implements IStageTermJi
     }
 
     /**
-     * @param $result
+     * @param ICalculationResult $result
      * @param ITerm $term
      * @param array $args
      */
-    protected function runAfterStage(&$result, ITerm $term, array $args)
+    protected function runAfterStage(ICalculationResult &$result, ITerm $term, array $args)
     {
         $stage = IStageTermJiraAfterCalculate::NAME . '.' . $this->marker;
         foreach ($this->getPluginsByStage($stage) as $plugin) {
@@ -125,30 +120,8 @@ abstract class JiraTermCalculator extends TermCalculator implements IStageTermJi
 
     /**
      * @param ITerm $term
-     * @return ITerm
-     */
-    protected function stabelizeTermMarker(ITerm $term): ITerm
-    {
-        if (!$term->hasParameter(static::TERM_PARAM__CALCULATION_MARKER)) {
-            $term->addParameterByValue(static::TERM_PARAM__CALCULATION_MARKER, '');
-        }
-
-        return $term;
-    }
-
-    /**
-     * @param $result
-     * @return array
-     */
-    protected function stabelizeResult($result): array
-    {
-        return is_array($result) ? $result : [static::RESULT__SOURCE => $result];
-    }
-
-    /**
-     * @param ITerm $term
      * @param array $args
-     * @return mixed
+     * @return ICalculationResult
      */
-    abstract protected function execute(ITerm $term, array $args);
+    abstract protected function execute(ITerm $term, array $args): ICalculationResult;
 }

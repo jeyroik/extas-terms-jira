@@ -2,6 +2,7 @@
 namespace extas\interfaces\stages;
 
 use extas\interfaces\terms\ITerm;
+use extas\interfaces\terms\jira\results\ICalculationResult;
 
 /**
  * Interface IStageTermJiraAfterCalculate
@@ -14,9 +15,9 @@ interface IStageTermJiraAfterCalculate
     public const NAME = 'extas.term.jira.after.calculate';
 
     /**
-     * @param mixed $result
+     * @param ICalculationResult $result
      * @param ITerm $term
      * @param array $args
      */
-    public function __invoke(&$result, ITerm $term, array $args): void;
+    public function __invoke(ICalculationResult &$result, ITerm $term, array $args): void;
 }
