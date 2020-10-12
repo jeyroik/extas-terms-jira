@@ -43,7 +43,8 @@ trait THasCalculatorArgs
                                         "colorName" => "green",
                                         "name" => "Done"
                                     ]
-                                ]
+                                ],
+                                'customfield_13004' => ['Role: 10100 (jeyroik)', 'Role: 12300 (jeyroik)']
                             ]
                         ],
                         [
@@ -64,7 +65,8 @@ trait THasCalculatorArgs
                                         "colorName" => "blue",
                                         "name" => "In progress"
                                     ]
-                                ]
+                                ],
+                                'customfield_13004' => ['Role: 10100 (jeyroik)', 'Role: 12300 (someuser)']
                             ]
                         ]
                     ],
@@ -73,7 +75,8 @@ trait THasCalculatorArgs
                         'status' => 'Status',
                         'timespent' => 'Time spent',
                         'priority' => 'Priority',
-                        'creator' => 'Creator'
+                        'creator' => 'Creator',
+                        'customfield_13004' => 'Grouped by'
                     ],
                     SearchResult::FIELD__SCHEMA => [
                         'project' => [
@@ -95,6 +98,10 @@ trait THasCalculatorArgs
                         'creator' => [
                             "type" => "user",
                             "system" => "creator"
+                        ],
+                        'customfield_13004' => [
+                            "type" => "any",
+                            "customId" => 13004
                         ]
                     ]
                 ])

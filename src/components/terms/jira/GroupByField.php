@@ -3,8 +3,10 @@ namespace extas\components\terms\jira;
 
 use extas\components\terms\jira\results\ResultArray;
 use extas\components\terms\jira\results\ResultIssues;
+use extas\interfaces\jira\issues\fields\IField;
 use extas\interfaces\jira\issues\IIssue;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
+use extas\interfaces\stages\IStageTermJiraGroupByArray;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\jira\results\ICalculationResult;
 use extas\interfaces\terms\jira\results\IResultArray;
@@ -96,6 +98,35 @@ class GroupByField extends JiraTermCalculator
         $field = $issue->getField($groupBy);
         $index = $field->$subfieldMethod();
 
+        return is_array($index)
+            ? $this->appendArray($field->getName() . '.' . $subfieldMethod, $groupedBy, $index, $issue)
+            : $this->appendString($groupedBy, $index, $issue);
+    }
+
+    /**
+     * @param string $suffix
+     * @param array $groupedBy
+     * @param array $index
+     * @param IIssue $issue
+     * @return array
+     */
+    protected function appendArray(string $suffix, array $groupedBy, array $index, IIssue $issue): array
+    {
+        foreach ($this->getPluginsByStage(IStageTermJiraGroupByArray::NAME . '.' . $suffix) as $plugin) {
+            $groupedBy = $plugin($groupedBy, $index, $issue);
+        }
+
+        return $groupedBy;
+    }
+
+    /**
+     * @param array $groupedBy
+     * @param string $index
+     * @param IIssue $issue
+     * @return array
+     */
+    protected function appendString(array $groupedBy, string $index, IIssue $issue): array
+    {
         if (!isset($groupedBy[$index])) {
             $groupedBy[$index] = [];
         }
