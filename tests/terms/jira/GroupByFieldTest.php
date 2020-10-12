@@ -19,10 +19,12 @@ use extas\interfaces\extensions\jira\fields\IExtensionNativeFields;
 use extas\interfaces\jira\issues\fields\IField;
 use extas\interfaces\samples\parameters\ISampleParameter;
 use extas\interfaces\stages\IStageTermJiraGroupBy;
+use extas\interfaces\stages\IStageTermJiraGroupByArray;
 use extas\interfaces\stages\IStageTermJiraMathOperation;
 use extas\interfaces\terms\ITerm;
 use extas\interfaces\terms\ITermCalculator;
 use PHPUnit\Framework\TestCase;
+use tests\terms\jira\misc\PluginGroupByArray;
 use tests\terms\jira\misc\THasCalculatorArgs;
 
 /**
@@ -144,11 +146,44 @@ class GroupByFieldTest extends TestCase
         $this->assertCount(1, $result['jeyroik'], 'Incorrect grouping');
     }
 
+    public function testGroupByArray()
+    {
+        $this->createSnuffPlugin(
+            PluginGroupByArray::class,
+            [IStageTermJiraGroupByArray::NAME . '.customfield_13004.getFieldValue']
+        );
+        $this->createSnuffPlugin(GroupIssuesCount::class, [IStageTermJiraGroupBy::NAME . '.customfield_13004']);
+        $term = $this->getTerm(true, 'customfield_13004', '');
+        $calculator = $this->getCalculator();
+        $args = $this->getArgs();
+
+        $this->assertTrue(
+            $calculator->canCalculate($term, $args),
+            'Incorrect calculate possibility'
+        );
+
+        $result = $calculator->calculateTerm($term, $args);
+
+        $this->assertEquals(
+            [
+                GroupIssuesCount::FIELD__SELF_MARKER . '.unknown' => [
+                    'jeyroik_10100' => 2,
+                    'jeyroik_12300' => 1,
+                    'someuser_12300' => 1,
+                ]
+            ],
+            $result,
+            'Incorrect result: ' . print_r($result, true)
+        );
+    }
+
     /**
      * @param bool $runStage
+     * @param string $field
+     * @param string $subfield
      * @return ITerm
      */
-    protected function getTerm(bool $runStage = true): ITerm
+    protected function getTerm(bool $runStage = true, string $field = 'creator', string $subfield = 'name'): ITerm
     {
         return new Term([
             Term::FIELD__PARAMETERS => [
@@ -158,11 +193,11 @@ class GroupByFieldTest extends TestCase
                 ],
                 GroupByField::TERM_PARAM__FIELD_NAME => [
                     ISampleParameter::FIELD__NAME => GroupByField::TERM_PARAM__FIELD_NAME,
-                    ISampleParameter::FIELD__VALUE => 'creator'
+                    ISampleParameter::FIELD__VALUE => $field
                 ],
                 GroupByField::TERM_PARAM__SUBFIELD_NAME => [
                     ISampleParameter::FIELD__NAME => GroupByField::TERM_PARAM__SUBFIELD_NAME,
-                    ISampleParameter::FIELD__VALUE => 'name'
+                    ISampleParameter::FIELD__VALUE => $subfield
                 ],
                 MathOperations::TERM_PARAM__STRATEGY => [
                     ISampleParameter::FIELD__NAME => MathOperations::TERM_PARAM__STRATEGY,

@@ -1,3 +1,8 @@
+# 3.0.1
+
+- Stage `IStageTermJiraGroupByArray` added.
+  - So you can group even by array-field now.
+
 # 3.0.0
 
 - `ICalculationResult` added.
